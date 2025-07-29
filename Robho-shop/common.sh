@@ -8,8 +8,5 @@ code_check() {
 }
 
 print_head() {
-  if [ -z "$*" ]; then    ## -z use for variable empty or not
-    echo "input missing"
-  fi
-  printf "\e[32m>>>>>>> "$*" <<<<<<<\e[0m\n"
+  echo "\e[32m>>>>>>> $* <<<<<<<\e[0m"
 }
