@@ -3,6 +3,7 @@ code_check() {
     echo -e "\e[32msuccess\e[0m"
   else
     echo -e "\e[31mfailure\e[0m"
+    exit 1
   fi
 }
 
