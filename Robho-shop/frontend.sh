@@ -1,8 +1,5 @@
 #!/bin/bash
 source common.sh
-log_file=/tmp/expense.log
-#print_head
-#code_check
 
 print_head "module disable nginx"
 dnf module disable nginx -y &>>log_file
@@ -12,7 +9,7 @@ print_head "module enable nginx"
 dnf module enable nginx:1.24 -y &>>log_file
 
 print_head "install nginx"
-dnf install nginx -y
+dnf install nginx -y &>>log_file
 code_check
 
 print_head "remove the default HTML content"
@@ -25,7 +22,7 @@ code_check
 
 print_head "unzip frontend content"
 cd /usr/share/nginx/html &>>log_file
-unzip /tmp/frontend.zip
+unzip /tmp/frontend.zip &>>log_file
 code_check
 
 print_head "add the config"
