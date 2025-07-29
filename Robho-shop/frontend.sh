@@ -1,5 +1,6 @@
 #!/bin/bash
 source common.sh
+log_file=/tmp/expense.log
 
 print_head "module disable nginx"
 dnf module disable nginx -y &>>log_file
