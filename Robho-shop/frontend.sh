@@ -8,6 +8,8 @@ code_check
 
 print_head "module enable nginx"
 dnf module enable nginx:1.24 -y &>>log_file
+code_check
+
 
 print_head "install nginx"
 dnf install nginx -y &>>log_file
