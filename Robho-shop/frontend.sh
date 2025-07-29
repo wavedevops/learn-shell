@@ -12,6 +12,11 @@ print_head "install nginx"
 dnf install nginx -y &>>log_file
 code_check
 
+print_head "Start & Enable Nginx service"
+systemctl enable nginx
+systemctl restart nginx
+code_check
+
 print_head "remove the default HTML content"
 rm -rf /usr/share/nginx/html/* &>>log_file
 code_check
