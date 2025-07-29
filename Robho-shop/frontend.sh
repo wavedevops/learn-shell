@@ -1,41 +1,41 @@
 #!/bin/bash
+
+# Load common functions (like print_head and code_check)
 source common.sh
-log_file=/tmp/expense.log
 
-print_head "module disable nginx"
-dnf module disable nginx -y &>>log_file
+LOG_FILE=/tmp/expense.log
+rm -f $LOG_FILE  # Clear previous log file
+
+print_head "Disabling existing Nginx module"
+dnf module disable nginx -y &>>$LOG_FILE
 code_check
 
-print_head "module enable nginx"
-dnf module enable nginx:1.24 -y &>>log_file
+print_head "Enabling Nginx 1.24 module"
+dnf module enable nginx:1.24 -y &>>$LOG_FILE
 code_check
 
-
-print_head "install nginx"
-dnf install nginx -y &>>log_file
+print_head "Installing Nginx"
+dnf install nginx -y &>>$LOG_FILE
 code_check
 
-
-
-print_head "remove the default HTML content"
-rm -rf /usr/share/nginx/html/* &>>log_file
+print_head "Removing default HTML content"
+rm -rf /usr/share/nginx/html/* &>>$LOG_FILE
 code_check
 
-print_head "add the config"
-cp nginx.conf /etc/nginx/nginx.conf &>>log_file
+print_head "Copying custom Nginx config"
+cp nginx.conf /etc/nginx/nginx.conf &>>$LOG_FILE
 code_check
 
-print_head "download frontend content"
-curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip &>>log_file
+print_head "Downloading frontend application content"
+curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip &>>$LOG_FILE
 code_check
 
-print_head "unzip frontend content"
-cd /usr/share/nginx/html &>>log_file
-unzip /tmp/frontend.zip &>>log_file
+print_head "Extracting frontend content"
+cd /usr/share/nginx/html &>>$LOG_FILE
+unzip /tmp/frontend.zip &>>$LOG_FILE
 code_check
 
-
-print_head "Start & Enable Nginx service"
-systemctl enable nginx
-systemctl restart nginx
+print_head "Starting and Enabling Nginx service"
+systemctl enable nginx &>>$LOG_FILE
+systemctl restart nginx &>>$LOG_FILE
 code_check
