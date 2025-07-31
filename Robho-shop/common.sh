@@ -68,7 +68,7 @@ systemd_setup() {
 }
 
 nodejs() {
-  print_head "desable and enable nodejs "
+  print_head "disable and enable nodejs "
   dnf module disable nodejs -y
   dnf module enable nodejs:20 -y
   code_check
