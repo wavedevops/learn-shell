@@ -9,7 +9,7 @@ print_head "installing mongodb"
 dnf install mongodb-org -y &>>$LOG_FILE
 code_check
 
-print_head "start and enable mongodb service" &>>$LOG_FILE
+print_head "start and enable mongodb service"
 systemctl enable mongod &>>$LOG_FILE
 systemctl start mongod &>>$LOG_FILE
 code_check
