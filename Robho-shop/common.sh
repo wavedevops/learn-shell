@@ -1,9 +1,10 @@
 #!/bin/bash
+app_user=roboshop
 LOG_FILE="/tmp/expense_$(date +%F_%H-%M-%S).log"
 rm -f $LOG_FILE
 
 code_check() {
-  if [ $? -eq 0 ]; then
+  if [ -eq 0 ]; then
     echo -e "\e[32msuccess\e[0m"
   else
     echo -e "\e[31mfailure\e[0m"
@@ -16,68 +17,71 @@ print_head() {
 }
 
 schema_setup() {
-  if [ "$schema_type" == "mongo" ]; then
-    print_head "Copying MongoDB repo file"
-    cp ${script_path}/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOG_FILE
+  if [ "$schema_setup" == "mongo" ]; then
+    print_head "Copy MongoDB repo"
+    cp ${script_path}/mongo.repo /etc/yum.repos.d/mongo.repo $LOG_FILE
     code_check
 
-    print_head "Installing MongoDB client"
-    dnf install mongodb-mongosh -y &>>$LOG_FILE
+    print_head "Install MongoDB Client"
+    yum install mongodb-org-shell -y $LOG_FILE
     code_check
 
-    print_head "Loading MongoDB schema"
-    mongosh --host mongodb.durgasri.in </app/schema/${component}.js &>>$LOG_FILE
+    print_head "Load Schema"
+    mongo --host mongodb-dev.rdevopsb72.online </app/schema/${component}.js $LOG_FILE
     code_check
   fi
 }
 
-node_js() {
-  print_head "Disable and enable NodeJS module"
-  dnf module disable nodejs -y &>>$LOG_FILE
-  dnf module enable nodejs:20 -y &>>$LOG_FILE
+app_prereq() {
+  print_head "Create Application User"
+  id ${app_user} $LOG_FILE
+  if [ -ne 0 ]; then
+    useradd ${app_user} $LOG_FILE
+  fi
+  code_check
+
+  print_head "Create Application Directory"
+  rm -rf /app $LOG_FILE
+  mkdir /app $LOG_FILE
+  code_check
+
+  print_head "Download Application Content"
+  curl -L -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}.zip $LOG_FILE
+  code_check
+
+  print_head "Extract Application Content"
+  cd /app
+  unzip /tmp/${component}.zip $LOG_FILE
+  code_check
+}
+
+systemd_setup() {
+  print_head "Setup SystemD Service"
+  cp ${script_path}/${component}.service /etc/systemd/system/${component}.service $LOG_FILE
+  code_check
+
+  print_head "Start ${component} Service"
+  systemctl daemon-reload $LOG_FILE
+  systemctl enable ${component} $LOG_FILE
+  systemctl restart ${component} $LOG_FILE
+  code_check
+}
+
+func_nodejs() {
+  print_head "Configuring NodeJS repos"
+  curl -sL https://rpm.nodesource.com/setup_lts.x | bash $LOG_FILE
   code_check
 
   print_head "Install NodeJS"
-  dnf install nodejs -y &>>$LOG_FILE
+  yum install nodejs -y $LOG_FILE
   code_check
 
-  print_head "Add roboshop user"
-  id roboshop &>>$LOG_FILE || useradd roboshop &>>$LOG_FILE
-  code_check
+  app_prereq
 
-  print_head "Create app directory"
-  mkdir -p /app &>>$LOG_FILE
-  code_check
-
-  print_head "Download ${component} content"
-  curl -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}-v3.zip &>>$LOG_FILE
-  code_check
-
-  print_head "Change to app directory"
-  cd /app &>>$LOG_FILE
-  code_check
-
-  print_head "Unzip ${component} content"
-  unzip -o /tmp/${component}.zip &>>$LOG_FILE
-  code_check
-
-  print_head "Download dependencies"
-  npm install &>>$LOG_FILE
-  code_check
-
-  print_head "Start the service"
-  systemctl enable ${component} &>>$LOG_FILE
-  systemctl start ${component} &>>$LOG_FILE
+  print_head "Install NodeJS Dependencies"
+  npm install $LOG_FILE
   code_check
 
   schema_setup
-
-  print_head "Start the service"
-  systemctl restart ${component} &>>$LOG_FILE
-
-  code_check
-
+  systemd_setup
 }
-
-
-
