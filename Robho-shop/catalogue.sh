@@ -59,7 +59,7 @@ npm install
 code_check
 
 print_head "Copy systemd service file"
-cp catalogue.service /etc/systemd/system/catalogue.service
+cp -r catalogue.service /etc/systemd/system/catalogue.service
 code_check
 
 print_head "Start catalogue service"
