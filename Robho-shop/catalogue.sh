@@ -1,6 +1,8 @@
 #!/bin/bash
 #
-pwd=${pwd}
+script=$(realpath "$0")
+script_path=$(dirname "$script")
+source ${script_path}/common.sh
 #
 #component=catalogue
 #schema_type=mongo
@@ -57,7 +59,7 @@ npm install
 code_check
 
 print_head "Copy systemd service file"
-cp ${pwd}/catalogue.service /etc/systemd/system/catalogue.service
+cp ${script_path}/catalogue.service /etc/systemd/system/catalogue.service
 code_check
 
 print_head "Start catalogue service"
