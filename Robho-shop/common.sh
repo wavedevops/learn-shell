@@ -30,11 +30,11 @@ node_js() {
   id roboshop &>>$LOG_FILE || useradd roboshop &>>$LOG_FILE
   code_check
 
-  print_head "Create application directory"
+  print_head "Create app directory"
   mkdir -p /app &>>$LOG_FILE
   code_check
 
-  print_head "Download application content"
+  print_head "Download ${component} content"
   curl -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}-v3.zip &>>$LOG_FILE
   code_check
 
@@ -42,7 +42,7 @@ node_js() {
   cd /app &>>$LOG_FILE
   code_check
 
-  print_head "Unzip application content"
+  print_head "Unzip ${component} content"
   unzip -o /tmp/${component}.zip &>>$LOG_FILE
   code_check
 
