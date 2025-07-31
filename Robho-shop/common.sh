@@ -55,3 +55,20 @@ node_js() {
   systemctl start ${component} &>>$LOG_FILE
   code_check
 }
+
+
+schema_setup() {
+  if [ "$schema_type" == "mongo" ]; then
+    print_head "Copying MongoDB repo file"
+    cp ${script_path}/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOG_FILE
+    code_check
+
+    print_head "Installing MongoDB client"
+    dnf install mongodb-mongosh -y &>>$LOG_FILE
+    code_check
+
+    print_head "Loading MongoDB schema"
+    mongosh --host mongodb.durgasri.in </app/schema/${component}.js &>>$LOG_FILE
+    code_check
+  fi
+}
