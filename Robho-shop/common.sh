@@ -35,7 +35,7 @@ schema_setup() {
 app_prereq() {
   print_head "Create Application User"
   id ${app_user} $LOG_FILE
-  if [ -ne 0 ]; then
+  if [ $? -ne 0 ]; then
     useradd ${app_user} $LOG_FILE
   fi
   code_check
