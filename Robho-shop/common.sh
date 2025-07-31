@@ -4,7 +4,7 @@ LOG_FILE="/tmp/expense_$(date +%F_%H-%M-%S).log"
 rm -f $LOG_FILE
 
 code_check() {
-  if [ -eq 0 ]; then
+  if [ $? -eq 0 ]; then
     echo -e "\e[32msuccess\e[0m"
   else
     echo -e "\e[31mfailure\e[0m"
@@ -69,8 +69,8 @@ systemd_setup() {
 
 nodejs() {
   print_head "disable and enable nodejs "
-  dnf module disable nodejs -y
-  dnf module enable nodejs:20 -y
+  dnf module disable nodejs -y $LOG_FILE
+  dnf module enable nodejs:20 -y $LOG_FILE
   code_check
 
   print_head "Install NodeJS"
