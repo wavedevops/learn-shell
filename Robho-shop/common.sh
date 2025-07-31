@@ -28,7 +28,7 @@ schema_setup() {
     code_check
 
     print_head "Load Schema"
-    mongo --host mongodb-dev.rdevopsb72.online </app/schema/${component}.js &>>$LOG_FILE
+    mongo --host 172.31.73.20 </app/schema/${component}.js &>>$LOG_FILE
     code_check
   fi
 }
