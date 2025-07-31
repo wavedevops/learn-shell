@@ -48,7 +48,7 @@ app_prereq() {
   code_check
 
   print_head "Download Application Content"
-  curl -L -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}.zip &>>$LOG_FILE
+  curl -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}-v3.zip &>>$LOG_FILE
   code_check
 
   print_head "Extract Application Content"
