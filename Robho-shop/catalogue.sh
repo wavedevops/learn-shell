@@ -13,7 +13,7 @@
 
 
 LOG_FILE="/tmp/catalogue_setup_$(date +%F_%H-%M-%S).log"
-exec &>>$LOG_FILE
+#exec &>>$LOG_FILE
 
 print_head() {
   echo -e "\e[33m>>>>>>> $1 <<<<<<<\e[0m"
