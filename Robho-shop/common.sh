@@ -1,6 +1,7 @@
 #!/bin/bash
 
-LOG_FILE=/tmp/expense.log
+
+LOG_FILE="/tmp/expense_$(date +%F).log"
 
 code_check() {
   if [ $? -eq 0 ]; then
