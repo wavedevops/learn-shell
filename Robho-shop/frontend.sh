@@ -3,7 +3,6 @@
 # Load common functions (like print_head and code_check)
 source common.sh
 
-LOG_FILE=/tmp/expense.log
 rm -f $LOG_FILE  # Clear previous log file
 
 print_head "Disabling existing Nginx module"
