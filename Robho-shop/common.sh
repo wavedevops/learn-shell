@@ -20,20 +20,17 @@ print_head() {
 schema_setup() {
   if [ "$schema_type" == "mongo" ]; then
     print_head "Copy MongoDB repo"
-#    cp ${script_path}/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOG_FILE
-#    code_check
-#
-#    print_head "Install MongoDB Client"
-#    dnf install mongodb-mongosh -y &>>$LOG_FILE
-#    code_check
-#
-#    print_head "Load Schema"
-#    mongo --host 172.31.73.20 </app/db/master-data.js &>>$LOG_FILE
-#    code_check
+    cp ${script_path}/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOG_FILE
+    code_check
 
-    cp ${pwd}/mongo.repo /etc/yum.repos.d/mongo.repo
-    dnf install mongodb-mongosh -y
-    mongosh --host 172.31.73.20 </app/db/master-data.js
+    print_head "Install MongoDB Client"
+    dnf install mongodb-mongosh -y &>>$LOG_FILE
+    code_check
+
+    print_head "Load Schema"
+    mongo --host 172.31.73.20 </app/db/master-data.js &>>$LOG_FILE
+    code_check
+
   fi
 }
 
