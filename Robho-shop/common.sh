@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-LOG_FILE="/tmp/expense_$(date +%F_%H-%M-%S).log"
+LOG_FILE="/tmp/expense_$(date +%F_%H / %M / %S).log"
 
 code_check() {
   if [ $? -eq 0 ]; then
