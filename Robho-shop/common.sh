@@ -68,8 +68,9 @@ systemd_setup() {
 }
 
 nodejs() {
-  print_head "Configuring NodeJS repos"
-  curl -sL https://rpm.nodesource.com/setup_lts.x | bash $LOG_FILE
+  print_head "desable and enable nodejs "
+  dnf module disable nodejs -y
+  dnf module enable nodejs:20 -y
   code_check
 
   print_head "Install NodeJS"
