@@ -10,7 +10,7 @@
 #nodejs
 #schema_setup "$schema_type" "mongo"
 
-set -e
+
 
 LOG_FILE="/tmp/catalogue_setup_$(date +%F_%H-%M-%S).log"
 exec &>>$LOG_FILE
