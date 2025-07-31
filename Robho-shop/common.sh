@@ -2,6 +2,7 @@
 
 
 LOG_FILE="/tmp/expense_$(date +%F_%H-%M-%S).log"
+rm -f $LOG_FILE
 
 code_check() {
   if [ $? -eq 0 ]; then

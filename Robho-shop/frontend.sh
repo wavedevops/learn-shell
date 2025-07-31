@@ -3,8 +3,6 @@
 # Load common functions (like print_head and code_check)
 source common.sh
 
-rm -f $LOG_FILE  # Clear previous log file
-
 print_head "Disabling existing Nginx module"
 dnf module disable nginx -y &>>$LOG_FILE
 code_check
