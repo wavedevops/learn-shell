@@ -24,7 +24,7 @@ schema_setup() {
     code_check
 
     print_head "Install MongoDB Client"
-    yum install mongodb-org-shell -y &>>$LOG_FILE
+    dnf install mongodb-mongosh -y &>>$LOG_FILE
     code_check
 
     print_head "Load Schema"
