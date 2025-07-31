@@ -69,7 +69,7 @@ systemctl start catalogue
 code_check
 
 print_head "Setup MongoDB repo"
-cp mongo.repo /etc/yum.repos.d/mongo.repo
+cp ${script_path}/mongo.repo /etc/yum.repos.d/mongo.repo
 code_check
 
 print_head "Install MongoDB shell client"
