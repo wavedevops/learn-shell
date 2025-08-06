@@ -2,6 +2,8 @@ That's great to hear, Hari! 🎉 Since you've completed your application setup u
 
 Here’s a **checklist + notes format** you can use to review and improve your process:
 ## **Give me checklist-style notes to avoid mistakes like last time**
+<span style="color:red">Give me checklist-style notes to avoid mistakes like last time</span>
+
 ---
 
 ## ✅ **Shell Scripting — Final Review Notes & Best Practices**
