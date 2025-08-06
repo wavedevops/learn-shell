@@ -4,7 +4,6 @@ Here’s a **checklist + notes format** you can use to review and improve your p
 ## **Give me checklist-style notes to avoid mistakes like last time**
 <span style="color:red">This is red</span>
 ---
-
 # 📝 My Notes
 
 ## ✅ Step 1: Setup NodeJS
@@ -35,7 +34,6 @@ Here’s a **checklist + notes format** you can use to review and improve your p
 
 - <span style="color:blue">Use emoji + HTML for better visibility in local Markdown preview</span>
 - <span style="color:gray">Colors won't show on GitHub Markdown preview</span>
-
 
 ---
 
