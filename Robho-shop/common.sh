@@ -1,90 +1,84 @@
 #!/bin/bash
-pwd=$(pwd)
-app_user=roboshop
-LOG_FILE="/tmp/expense_$(date +%F_%H-%M-%S).log"
-rm -f $LOG_FILE
 
-code_check() {
-  if [ $? -eq 0 ]; then
-    echo -e "\e[32msuccess\e[0m"
-  else
-    echo -e "\e[31mfailure\e[0m"
-    exit 1
-  fi
-}
+# Get script location
+script=$(realpath "$0")
+script_path=$(dirname "$script")
+
+# -----------------------
+# 💡 Helper Functions
+# -----------------------
 
 print_head() {
   echo -e "\e[33m>>>>>>> $1 <<<<<<<\e[0m"
 }
 
-schema_setup() {
-  if [ "$schema_type" == "mongo" ]; then
-    print_head "Copy MongoDB repo"
-    cp ${script_path}/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOG_FILE
-    code_check
-
-    print_head "Install MongoDB Client"
-    dnf install mongodb-mongosh -y &>>$LOG_FILE
-    code_check
-
-    print_head "Load Schema"
-    mongo --host 172.31.73.20 </app/db/master-data.js &>>$LOG_FILE
-    code_check
-
+code_check() {
+  if [ $? -eq 0 ]; then
+    echo -e "\e[32m✔ success\e[0m"
+  else
+    echo -e "\e[31m✘ failure\e[0m"
+    exit 1
   fi
 }
 
-app_prereq() {
-  print_head "Create Application User"
-  id ${app_user} &>>$LOG_FILE
-  if [ $? -ne 0 ]; then
-    useradd ${app_user} &>>$LOG_FILE
-  fi
+# -----------------------
+# 🔁 DRY: Download & Extract
+# -----------------------
+download_and_extract() {
+  print_head "Download $component application content"
+  curl -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}-v3.zip
   code_check
 
-  print_head "Create Application Directory"
-  rm -rf /app &>>$LOG_FILE
-  mkdir /app &>>$LOG_FILE
-  code_check
-
-  print_head "Download Application Content"
-  curl -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}-v3.zip &>>$LOG_FILE
-  code_check
-
-  print_head "Extract Application Content"
+  print_head "Extract $component content"
+  rm -rf /app/*
+  mkdir -p /app
   cd /app
-  unzip /tmp/${component}.zip &>>$LOG_FILE
+  unzip -o /tmp/${component}.zip
   code_check
 }
 
-systemd_setup() {
-  print_head "Setup SystemD Service"
-  cp ${script_path}/${component}.service /etc/systemd/system/${component}.service &>>$LOG_FILE
+
+nodejs_app_setup() {
+  print_head "Disable existing NodeJS module"
+  dnf module disable nodejs -y
   code_check
 
-  print_head "Start ${component} Service"
-  systemctl daemon-reload &>>$LOG_FILE
-  systemctl enable ${component} &>>$LOG_FILE
-  systemctl restart ${component} &>>$LOG_FILE
-  code_check
-}
-
-nodejs() {
-  print_head "Disable and Enable NodeJS Module"
-  dnf module disable nodejs -y &>>$LOG_FILE
-  dnf module enable nodejs:20 -y &>>$LOG_FILE
+  print_head "Enable NodeJS 20 module"
+  dnf module enable nodejs:20 -y
   code_check
 
   print_head "Install NodeJS"
-  yum install nodejs -y &>>$LOG_FILE
+  dnf install nodejs -y
   code_check
 
-  app_prereq
-
-  print_head "Install NodeJS Dependencies"
-  npm install &>>$LOG_FILE
+  print_head "Create roboshop user"
+  id roboshop &>/dev/null || useradd roboshop
   code_check
 
-  schema_setup
-  systemd_setup
+  download_and_extract
+
+  print_head "Install NodeJS dependencies"
+  npm install
+  code_check
+
+  print_head "Copy systemd service file"
+  cp ${script_path}/${component}.service /etc/systemd/system/${component}.service
+  code_check
+
+  print_head "Start $component service"
+  systemctl daemon-reload
+  code_check
+
+  systemctl enable ${component}
+  code_check
+
+  systemctl start ${component}
+  code_check
 }
+
+## -----------------------
+## 🟢 Call the Function Here
+## -----------------------
+#
+#component=catalogue  # change this for other components like user, cart, etc.
+#nodejs_app_setup
