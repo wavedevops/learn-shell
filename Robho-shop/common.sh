@@ -4,9 +4,8 @@
 script=$(realpath "$0")
 script_path=$(dirname "$script")
 
-# -----------------------
-# 💡 Helper Functions
-# -----------------------
+# variables
+app_user=roboshop
 
 print_head() {
   echo -e "\e[33m>>>>>>> $1 <<<<<<<\e[0m"
@@ -21,9 +20,22 @@ code_check() {
   fi
 }
 
-# -----------------------
-# 🔁 DRY: Download & Extract
-# -----------------------
+schema_setup() {
+  if [ "$schema_type" == "mongo" ]; then
+    print_head "Copy MongoDB repo file"
+    cp ${script_path}/mongo.repo /etc/yum.repos.d/mongo.repo
+    code_check
+
+    print_head "Install Mongo Shell"
+    dnf install mongodb-mongosh -y
+    code_check
+
+    print_head "Load schema into MongoDB"
+    mongosh --host MONGODB-SERVER-IPADDRESS </app/db/master-data.js
+    code_check
+  fi
+}
+
 download_and_extract() {
   print_head "Download $component application content"
   curl -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}-v3.zip
@@ -37,6 +49,21 @@ download_and_extract() {
   code_check
 }
 
+systemd_setup() {
+  print_head "Copy systemd service file for $component"
+  cp ${script_path}/${component}.service /etc/systemd/system/${component}.service
+  code_check
+
+  print_head "Start $component service using systemd"
+  systemctl daemon-reload
+  code_check
+
+  systemctl enable ${component}
+  code_check
+
+  systemctl restart ${component}
+  code_check
+}
 
 nodejs_app_setup() {
   print_head "Disable existing NodeJS module"
@@ -52,7 +79,7 @@ nodejs_app_setup() {
   code_check
 
   print_head "Create roboshop user"
-  id roboshop &>/dev/null || useradd roboshop
+  id ${app_user} &>/dev/null || useradd ${app_user}
   code_check
 
   download_and_extract
@@ -61,24 +88,7 @@ nodejs_app_setup() {
   npm install
   code_check
 
-  print_head "Copy systemd service file"
-  cp ${script_path}/${component}.service /etc/systemd/system/${component}.service
-  code_check
+  schema_setup
 
-  print_head "Start $component service"
-  systemctl daemon-reload
-  code_check
-
-  systemctl enable ${component}
-  code_check
-
-  systemctl start ${component}
-  code_check
+  systemd_setup
 }
-
-## -----------------------
-## 🟢 Call the Function Here
-## -----------------------
-#
-#component=catalogue  # change this for other components like user, cart, etc.
-#nodejs_app_setup
