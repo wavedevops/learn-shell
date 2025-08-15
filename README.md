@@ -2,40 +2,7 @@ That's great to hear, Hari! 🎉 Since you've completed your application setup u
 
 Here’s a **checklist + notes format** you can use to review and improve your process:
 ## **Give me checklist-style notes to avoid mistakes like last time**
-<span style="color:red">This is red</span>
----
-# 📝 My Notes
 
-## ✅ Step 1: Setup NodeJS
-
-<span style="color:green">✔ NodeJS module disabled</span>  
-<span style="color:green">✔ NodeJS 20 enabled</span>  
-<span style="color:green">✔ NodeJS dependencies installed</span>
-
----
-
-## ⚠️ Step 2: Schema Setup
-
-<span style="color:orange">⚠ Make sure you define `schema_type=mongo` before calling the function</span>  
-<span style="color:red">❌ Don't call function before setting variables</span>
-
----
-
-## 🔍 Common Mistakes
-
-- <span style="color:red">❌ Forgot `code_check` after major steps</span>
-- <span style="color:red">❌ Wrong order: function called before variable defined</span>
-- <span style="color:orange">⚠ Variable name mismatch</span>
-- <span style="color:green">✅ All corrections applied and tested</span>
-
----
-
-## 📌 Notes
-
-- <span style="color:blue">Use emoji + HTML for better visibility in local Markdown preview</span>
-- <span style="color:gray">Colors won't show on GitHub Markdown preview</span>
-
----
 
 ## ✅ **Shell Scripting — Final Review Notes & Best Practices**
 
